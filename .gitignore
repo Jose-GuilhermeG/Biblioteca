@@ -1,0 +1,17 @@
+#project
+__pycache__
+*.pyc
+*.log
+media
+**/migrations/**
+!__init__.py
+*.sqlite3
+
+
+#env
+.env
+env
+venv
+ENV
+VENV
+
