@@ -32,6 +32,7 @@ ALLOWED_HOSTS = ['*']
 # Application definition
 PROJECT_APPS =[
     'core',
+    'book',
 ]
 THIRD_PARTY_APPS = [
     'rest_framework',
