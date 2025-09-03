@@ -28,11 +28,25 @@ class Book(
         null=False,
     )
     
+    slug = models.SlugField(
+        _("Slug do livro"),
+        unique=True,
+        null=True,
+    )
+    
     desciption = models.TextField(
         verbose_name=_("Descrição do livro"),
         blank=True,
         null=False,
         help_text=_("Descrição do livro, sem tamanho maximo aceita qualquer caracter e pode estar vazia")
+    )
+    
+    price = models.DecimalField(
+        verbose_name=_("Preço do livro"),
+        decimal_places=2,
+        max_digits=5,
+        null=True,
+        default=0,
     )
     
     content = models.TextField(
@@ -50,6 +64,9 @@ class Book(
     
     def __str__(self):
         return self.title
+    
+    def is_free(self):
+        return self.price == 0
     
     class Meta:
         verbose_name =_("Livro")

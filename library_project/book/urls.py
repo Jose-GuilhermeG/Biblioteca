@@ -15,5 +15,10 @@ urlpatterns = [
         'create/',
         views.BookCreateView.as_view(),
         name='book_create'
+    ),
+    path(
+        'detail/<str:slug>/',
+        views.BookDetailView.as_view(),
+        name='book_detail'
     )
 ]
