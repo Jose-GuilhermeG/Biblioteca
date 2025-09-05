@@ -1,9 +1,10 @@
 #imports
 from django.db import models
 from core.models import CanBeMonitorated
-from core.constans import MEDIUN_CHAR_SIZE
+from core.constans import *
 from django.utils.translation import gettext_lazy as _
 from django.contrib.auth import get_user_model
+from django.urls import reverse
 
 USER = get_user_model()
 
@@ -62,12 +63,52 @@ class Book(
         null=True
     )
     
+    category = models.ManyToManyField(
+        verbose_name=_("Categorias do livro"),
+        related_name='book',
+        to='book.Category',
+        blank=True,
+        null=True,
+    )
+    
     def __str__(self):
         return self.title
     
     def is_free(self):
         return self.price == 0
     
+    def get_absolute_url(self):
+        return reverse("book:book_detail", kwargs={"slug": self.slug})
+    
+    
     class Meta:
         verbose_name =_("Livro")
         verbose_name_plural =_("Livros")
+        
+
+class Category(
+    CanBeMonitorated
+):
+    
+    name = models.CharField(
+        verbose_name=_("Nome da categoria"),
+        max_length=SMALL_CHAR_SIZE,
+        null=False,
+        blank=False,
+        unique=True
+    )
+    
+    slug = models.SlugField(
+        _("Slug da categoria"),
+        unique=True,
+        null=False,
+        blank=False
+    )
+    
+
+    def __str__(self):
+        return self.name
+    
+    class Meta:
+        verbose_name = _("Categoria")
+        verbose_name_plural = _("Categorias")

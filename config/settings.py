@@ -37,7 +37,8 @@ PROJECT_APPS =[
 ]
 THIRD_PARTY_APPS = [
     'rest_framework',
-    'django_filters'
+    'django_filters',
+    'drf_spectacular',
 ]
 DJANGO_APPS =[
     'django.contrib.admin',
@@ -48,6 +49,10 @@ DJANGO_APPS =[
     'django.contrib.staticfiles',
 ]
 INSTALLED_APPS = PROJECT_APPS + THIRD_PARTY_APPS + DJANGO_APPS
+
+REST_FRAMEWORK = {
+    'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
+}
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',

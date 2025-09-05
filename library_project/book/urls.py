@@ -20,5 +20,20 @@ urlpatterns = [
         'detail/<str:slug>/',
         views.BookDetailView.as_view(),
         name='book_detail'
+    ),
+    path(
+        'category/list/',
+        views.CategoryListView.as_view(),
+        name='category_list',
+    ),
+    path(
+        'category/create/',
+        views.CategoryCreateView.as_view(),
+        name='category_create',
+    ),
+    path(
+        'category/detail/<str:slug>/',
+        views.CategoryDetailView.as_view(),
+        name='category_detail'
     )
 ]

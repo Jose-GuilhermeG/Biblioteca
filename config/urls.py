@@ -18,12 +18,27 @@ from django.contrib import admin
 from django.urls import path,include
 from django.conf import settings
 from django.conf.urls.static import static
+from drf_spectacular.views import SpectacularSwaggerView,SpectacularAPIView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('book/',include(('book.urls','book'),namespace='book'))
 ]
 
+#documentation
+urlpatterns += [
+    path(
+        'docs/schema/',
+        SpectacularAPIView.as_view(),
+        name='schema'
+    ),
+    path(
+        'docs/',
+        SpectacularSwaggerView.as_view(url_name='schema'),
+        name='swagger'
+    ),
+    
+]
 
 if settings.DEBUG:
     print('\033[91m'+"Servidor em debug"+'\033[0m')

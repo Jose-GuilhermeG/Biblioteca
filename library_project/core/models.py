@@ -29,16 +29,16 @@ class CanBeMonitorated(
         verbose_name=_("Criado por"),
         to=USER,
         on_delete=models.SET_NULL,
-        related_name="creations",
-        null=True
+        null=True,
+        related_name='created_%(class)s'
     )
     
     updated_by = models.ForeignKey(
         verbose_name=_("Atualizado por"),
         to=USER,
         on_delete=models.SET_NULL,
-        related_name="updateds",
-        null=True
+        null=True,
+        related_name='updated_%(class)s'
     )
     
     class Meta:
