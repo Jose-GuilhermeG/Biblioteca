@@ -33,3 +33,15 @@ class BookSerializer(
         self.validated_data['slug'] = slugify(self.validated_data.get("title"))
         return super().save(**kwargs)
     
+    
+class BookListSerializer(
+    serializers.HyperlinkedModelSerializer
+):
+    url = serializers.HyperlinkedIdentityField(
+        view_name = 'book:book_detail',
+        lookup_field='slug'
+    )
+    
+    class Meta:
+        model = Book
+        fields = ['title','price','url']

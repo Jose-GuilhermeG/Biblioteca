@@ -22,6 +22,11 @@ urlpatterns = [
         name='book_detail'
     ),
     path(
+        'search/<str:title>/',
+        views.BookSearchView.as_view(),
+        name='book_search'
+    ),
+    path(
         'category/list/',
         views.CategoryListView.as_view(),
         name='category_list',

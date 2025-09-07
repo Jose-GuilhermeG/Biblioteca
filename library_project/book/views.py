@@ -6,10 +6,12 @@ from django.utils.translation import gettext_lazy as _
 from django.db.models.functions import Lower
 from .filters import BookFilter
 
-from core.mixins import SuccessFullCreateMessageMixin
+from .permissions import CretaedByUserOrReadOnly
+
+from core.mixins import SuccessFullCreateMessageMixin,SuccessFullUpdatedMessageMixin
 
 #serializer
-from .serializers import BookSerializer,CategorySerializer
+from .serializers import BookSerializer,CategorySerializer,BookListSerializer
 
 #model
 from .models import Book,Category
@@ -19,13 +21,13 @@ class BookListView(
     generics.ListAPIView
 ):
     queryset = Book.objects.all().order_by(Lower("title"))
-    serializer_class = BookSerializer
+    serializer_class = BookListSerializer
     filter_backends = [filters.DjangoFilterBackend]
     filterset_class = BookFilter
     
 class BookCreateView(
     SuccessFullCreateMessageMixin,
-    generics.CreateAPIView
+    generics.CreateAPIView,
 ):
     permission_classes = [permissions.IsAuthenticated]
     queryset = Book.objects.all()
@@ -41,9 +43,10 @@ class BookCreateView(
         
     
 class BookDetailView(
-    generics.RetrieveUpdateDestroyAPIView
+    SuccessFullUpdatedMessageMixin,
+    generics.RetrieveUpdateDestroyAPIView,
 ):
-    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+    permission_classes = [CretaedByUserOrReadOnly]
     queryset = Book.objects.all()
     serializer_class = BookSerializer
     lookup_field = 'slug'
@@ -53,10 +56,16 @@ class BookDetailView(
             updated_by = self.request.user
         )
     
-    def update(self, request, *args, **kwargs):
-        response = super().update(request, *args, **kwargs)
-        response['message'] = 'Updated sucefully'
-        return response
+class BookSearchView(
+    generics.ListAPIView
+):
+    serializer_class = BookListSerializer
+    
+    def get_queryset(self):
+        kwargs:dict = self.kwargs
+        title:str = kwargs.get("title")
+        queryset = Book.objects.filter(title__icontains = title).order_by(Lower("title"))
+        return queryset
     
 class CategoryListView(
     generics.ListAPIView
@@ -82,9 +91,10 @@ class CategoryCreateView(
         
         
 class CategoryDetailView(
+    SuccessFullUpdatedMessageMixin,
     generics.RetrieveUpdateDestroyAPIView
 ):
-    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+    permission_classes = [CretaedByUserOrReadOnly]
     queryset = Category.objects.all()
     serializer_class = CategorySerializer
     lookup_field = 'slug'
@@ -94,8 +104,3 @@ class CategoryDetailView(
         serializer.save(
             updated_by = self.request.user
         )
-    
-    def update(self, request, *args, **kwargs):
-        response = super().update(request, *args, **kwargs)
-        response['message'] = 'Updated sucefully'
-        return response
